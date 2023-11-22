@@ -8,19 +8,27 @@
     <title>My Dictonary</title>
 </head>
 <body>
+    <div id="toasts"></div>
     <nav>
         <div class="logo-container">
             <img class="logo" src="My DICTIONARY App.png" alt="logo">
             <h2>My DICTIONARY App</h2>
         </div>
-        <button class="btn">HISTORY</button>
+        <button class="btn" data-primary-btn="history">HISTORY</button>
     </nav>
     <main>
         <h1>Search for new word</h1>
         <div class="search-container">
-            <input type="text" name="search" id="search" class="search-box">
-            <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <input type="text" name="search" id="search" class="search-box" data-input>
+            <button class="search-btn" data-search-btn><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
+        <!-- <div class="card">
+            <h2 class="word">word: hello</h2>
+            <p class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, nulla!</p>
+            <i class="fa-regular fa-trash-can trash"></i>
+        </div> -->
+        
     </main>
+    <script src="App.js"></script>
 </body>
 </html>
