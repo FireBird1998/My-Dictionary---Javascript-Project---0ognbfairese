@@ -4,7 +4,7 @@ const input = document.querySelector('[data-input]');
 const searchBtn = document.querySelector('[data-search-btn]');
 
 
-let searchedData = [];
+let searchData = [];
 searchBtn.addEventListener('click', () => {
     
     //check if the input is empty and calling back tost and return
@@ -39,14 +39,14 @@ function fetchData(url){
         console.log(definition);
         console.log(word);
         
-        searchedData = [word, definition];
-        
-        displayData();
+        searchData = [word, definition];
+        puttingObjectInLocalStorage(searchData);
+        displayDataSearch();
     });
     
 }
 
-function displayData(){
+function displayDataSearch(){
     const main = document.querySelector('main');
     
     if(main.contains(document.querySelector('.card'))){
@@ -54,11 +54,98 @@ function displayData(){
     }
     const card = `
         <div class="card">
-            <h2 class="word">word: ${searchedData[0]}</h2>
-            <p class="description">${searchedData[1]}</p>
+            <h2 class="word">word: ${searchData[0]}</h2>
+            <p class="description">${searchData[1]}</p>
         </div>
     `
     main.insertAdjacentHTML('beforeend', card);
+}
+
+//togelling between search and history
+primaryBtn.addEventListener('click', () => {
+    const history = document.querySelector('.history');
+    const main = document.querySelector('main');
+
+    if (primaryBtn.getAttribute('data-primary-btn') === 'history') {
+        primaryBtn.setAttribute('data-primary-btn', 'search');
+        primaryBtn.innerText = 'SEARCH';
+        console.log("search is set");
+        main.style.display = 'none';
+        history.style.display = 'flex';
+        displayDataHistory();
+    } else if(primaryBtn.getAttribute('data-primary-btn') === 'search') {
+        primaryBtn.setAttribute('data-primary-btn', 'history');
+        primaryBtn.innerText = 'HISTORY';
+        console.log("History is set");
+        main.style.display = 'flex';
+        history.style.display = 'none';
+    }
+
+});
+
+function puttingObjectInLocalStorage(searchData){
+    const object = {
+        word: searchData[0],
+        definition: searchData[1]
+    }
+
+     // Retrieve the existing array from local storage
+     let searches = JSON.parse(localStorage.getItem('searches'));
+
+     // If the array doesn't exist yet, create it
+     if (!searches) {
+         searches = [];
+     }
+ 
+     // Add the new object to the array
+     searches.push(object);
+ 
+     // Store the updated array back in local storage
+     localStorage.setItem('searches', JSON.stringify(searches));
+    
+}
+
+
+//displaying the history
+function displayDataHistory(){
+    let searches = JSON.parse(localStorage.getItem('searches'));
+    const history = document.querySelector('.history');
+    history.innerHTML = '';
+    for(let i = 0; i < searches.length; i++) {
+        let card = `
+        <div class="hcard">
+            <h2 class="word">word: ${searches[i].word}</h2>
+            <p class="description">${searches[i].definition}</p>
+            <i class="fa-regular fa-trash-can trash" data-trash="${i}"></i>
+        </div>
+        `
+        history.insertAdjacentHTML('beforeend', card);
+    }
+    trash();
+}
+
+
+function trash(){
+    let trashs = document.querySelectorAll('[data-trash]');
+    trashs.forEach(trash => {
+        trash.addEventListener('click', () => {
+            // Retrieve the existing array from local storage
+            let searches = JSON.parse(localStorage.getItem('searches'));
+
+            // Get the index from the data-trash attribute
+            let index = parseInt(trash.getAttribute('data-trash'));
+
+            // Remove the item at the index from the array
+            searches.splice(index, 1);
+
+            // Store the updated array back in local storage
+            localStorage.setItem('searches', JSON.stringify(searches));
+
+            displayDataHistory();
+        })
+            
+    })
+
 }
 
 
